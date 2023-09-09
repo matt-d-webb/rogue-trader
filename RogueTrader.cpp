@@ -6,7 +6,6 @@
 #include "CSVReader.h"
 
 RogueTrader::RogueTrader() {
-
 }
 
 void RogueTrader::init() {

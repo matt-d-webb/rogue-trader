@@ -75,6 +75,5 @@ OrderBookEntry CSVReader::stringsToOBE(std::vector<std::string> strings)
     }
 
     OrderBookEntry obe{price, amount, strings[0], strings[1], OrderBookEntry::stringToOrderBookType(strings[2])};
-
     return obe;
 };
