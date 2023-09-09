@@ -3,10 +3,10 @@
 #include <vector>
 #include "OrderBookEntry.h"
 
-class MerkelMain
+class RogueTrader
 {
 public:
-    MerkelMain();
+    RogueTrader();
     //** Initialise the program */
     void init();
 

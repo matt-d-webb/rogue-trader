@@ -14,9 +14,6 @@ std::vector<OrderBookEntry> CSVReader::readCSV(std::string filename)
     std::ifstream csvFile{filename};
     std::vector<OrderBookEntry> entries;
 
-    char s = ",";
-    
-
     if (csvFile.is_open())
     {
         std::string line;

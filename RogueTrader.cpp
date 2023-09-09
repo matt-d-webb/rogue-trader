@@ -2,14 +2,14 @@
 #include <string>
 #include <vector>
 #include "OrderBookEntry.h"
-#include "MerkelMain.h"
+#include "RogueTrader.h"
 #include "CSVReader.h"
 
-MerkelMain::MerkelMain() {
+RogueTrader::RogueTrader() {
 
 }
 
-void MerkelMain::init() {
+void RogueTrader::init() {
     int input;
     while(true) {
         loadOrderBook();
@@ -22,16 +22,16 @@ void MerkelMain::init() {
     }
 }
 
-void MerkelMain::loadOrderBook() {
+void RogueTrader::loadOrderBook() {
     orders = CSVReader::readCSV("data/20200317.csv");
 }
 
-void MerkelMain::printHelp()
+void RogueTrader::printHelp()
 {
     std::cout << "Help - choose options from the menu options." << std::endl;
 }
 
-void MerkelMain::printStats()
+void RogueTrader::printStats()
 {
     unsigned int bids = 0;
     unsigned int asks = 0;
@@ -55,27 +55,27 @@ void MerkelMain::printStats()
     std::cout << "===============================" << std::endl;
 }
 
-void MerkelMain::enterOffer()
+void RogueTrader::enterOffer()
 {
     std::cout << "Ask - the seller" << std::endl;
 }
 
-void MerkelMain::enterBid()
+void RogueTrader::enterBid()
 {
     std::cout << "Bid - the buyer" << std::endl;
 }
 
-void MerkelMain::printWallet()
+void RogueTrader::printWallet()
 {
     std::cout << "Waller" << std::endl;
 }
 
-void MerkelMain::gotoNextTimeFrame()
+void RogueTrader::gotoNextTimeFrame()
 {
     std::cout << "Continue" << std::endl;
 }
 
-void MerkelMain::printMenu()
+void RogueTrader::printMenu()
 {
     std::cout << "======== Rogue Trader ============" << std::endl;
     std::cout << "1: Print help" << std::endl;
@@ -88,7 +88,7 @@ void MerkelMain::printMenu()
     std::cout << "==================================" << std::endl;
 }
 
-int MerkelMain::getUserOption()
+int RogueTrader::getUserOption()
 {
     int userOption;
     std::cout << "Options: Type in 1-7" << std::endl;
@@ -96,7 +96,7 @@ int MerkelMain::getUserOption()
     return userOption;
 }
 
-void MerkelMain::processUserOption(int userOption)
+void RogueTrader::processUserOption(int userOption)
 {
     if (userOption == 1)
     {
