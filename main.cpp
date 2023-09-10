@@ -1,4 +1,6 @@
 #include "RogueTrader.h"
+#include "Wallet.h"
+#include <iostream>
 
 int main()
 {

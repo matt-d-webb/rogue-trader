@@ -10,7 +10,21 @@ OrderBookType OrderBookEntry::stringToOrderBookType(std::string s) {
         return OrderBookType::ask;
     } else if(s == "bid") {
         return OrderBookType::bid;
+    } else if(s == "sale") {
+        return OrderBookType::sale;
     } else {
         return OrderBookType::unknown;
     }
 };
+
+bool OrderBookEntry::compareByTimestamp(OrderBookEntry& obe1, OrderBookEntry& obe2) {
+    return obe1.timestamp < obe2.timestamp;
+};
+
+bool OrderBookEntry::compareByPriceAsc(OrderBookEntry& obe1, OrderBookEntry& obe2) {
+    return obe1.price < obe2.price;
+}
+
+bool OrderBookEntry::compareByPriceDesc(OrderBookEntry& obe1, OrderBookEntry& obe2) {
+    return obe1.price > obe2.price;
+}

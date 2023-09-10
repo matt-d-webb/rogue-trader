@@ -77,3 +77,26 @@ OrderBookEntry CSVReader::stringsToOBE(std::vector<std::string> strings)
     OrderBookEntry obe{price, amount, strings[0], strings[1], OrderBookEntry::stringToOrderBookType(strings[2])};
     return obe;
 };
+
+OrderBookEntry CSVReader::stringsToOBE(std::string price,
+                                       std::string amount,
+                                       std::string timestamp,
+                                       std::string product,
+                                       OrderBookType type)
+{
+    double _price, _amount;
+
+    try
+    {
+        _price = std::stod(price);
+        _amount = std::stod(amount);
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "Error converting string to double" << price << std::endl;
+        std::cout << "Error converting string to double" << amount << std::endl;
+        throw e;
+    }
+    OrderBookEntry obe{_price, _amount, timestamp, product, type};
+    return obe;
+}

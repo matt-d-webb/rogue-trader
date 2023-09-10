@@ -4,6 +4,7 @@
 #include "OrderBookEntry.h"
 #include "RogueTrader.h"
 #include "CSVReader.h"
+#include "Wallet.h"
 
 RogueTrader::RogueTrader()
 {
@@ -13,6 +14,12 @@ void RogueTrader::init()
 {
     int input;
     currentTimeFrame = orderBook.getEarliestTime();
+
+    wallet.insertCurrency("BTC", 10.0);
+    wallet.insertCurrency("USDT", 1000.0);
+
+    std::cout << "Wallet contains BTC: " << wallet.containsCurrency("BTC", 9.0) << std::endl;
+
     std::cout << "Welcome to Rogue Trader!" << std::endl;
     while (true)
     {
@@ -58,19 +65,88 @@ void RogueTrader::printStats()
     }
 };
 
-void RogueTrader::enterOffer()
+void RogueTrader::enterAsk()
 {
-    std::cout << "Ask - the seller" << std::endl;
+    std::cout << "Ask - enter amount: product, price, amount e.g ETH/BTC,200,0.5" << std::endl;
+    std::string input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, input);
+
+    std::vector<std::string> tokens = CSVReader::tokenise(input, ',');
+    if (tokens.size() != 3)
+    {
+        std::cout << "Invalid input, please try again." << std::endl;
+        return;
+    }
+    else
+    {
+        try
+        {
+            OrderBookEntry obe = CSVReader::stringsToOBE(
+                tokens[1],
+                tokens[2], currentTimeFrame,
+                tokens[0], OrderBookType::ask);
+
+            if(wallet.canFulfillOrder(obe)) {
+                orderBook.insertOrder(obe);
+            } else {
+                std::cout << "RogueTrader::enterAsk - Insufficient funds, please try again." << std::endl;
+                return;
+            }
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << "RogueTrader::enterAsk - Invalid input, please try again." << std::endl;
+            return;
+        }
+    }
+
+    std::cout << "You entered: " << input << std::endl;
 }
 
 void RogueTrader::enterBid()
 {
-    std::cout << "Bid - the buyer" << std::endl;
+    std::cout << "Bid - enter amount: product, price, amount e.g ETH/BTC,200,0.5" << std::endl;
+    std::string input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, input);
+
+    std::vector<std::string> tokens = CSVReader::tokenise(input, ',');
+    if (tokens.size() != 3)
+    {
+        std::cout << "Invalid input, please try again." << std::endl;
+        return;
+    }
+    else
+    {
+        try
+        {
+            OrderBookEntry obe = CSVReader::stringsToOBE(
+                tokens[1],
+                tokens[2], currentTimeFrame,
+                tokens[0], OrderBookType::bid);
+
+            if(wallet.canFulfillOrder(obe)) {
+                orderBook.insertOrder(obe);
+            } else {
+                std::cout << "RogueTrader::enterBid - Insufficient funds, please try again." << std::endl;
+                return;
+            }
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << "RogueTrader::enterBid - Invalid input, please try again." << std::endl;
+            return;
+        }
+    }
+
+    std::cout << "You entered: " << input << std::endl;
 }
 
 void RogueTrader::printWallet()
 {
-    std::cout << "Waller" << std::endl;
+    std::cout << "Wallet" << std::endl;
+    std::cout << wallet.toString() << std::endl;
 }
 
 void RogueTrader::gotoNextTimeFrame()
@@ -95,45 +171,39 @@ void RogueTrader::printMenu()
 
 int RogueTrader::getUserOption()
 {
-    int userOption;
-    std::cout << "Options: Type in 1-7" << std::endl;
-    std::cin >> userOption;
-    return userOption;
+    std::cout << "Enter option: ";
+    int input;
+    std::cin >> input;
+    return input;
 }
 
 void RogueTrader::processUserOption(int userOption)
 {
-    if (userOption == 1)
+    switch (userOption)
     {
+    case 1:
         printHelp();
-    }
-
-    if (userOption == 2)
-    {
+        break;
+    case 2:
         printStats();
-    }
-
-    if (userOption == 3)
-    {
-        enterOffer();
-    }
-
-    if (userOption == 4)
-    {
+        break;
+    case 3:
+        enterAsk();
+        break;
+    case 4:
         enterBid();
-    }
-
-    if (userOption == 5)
-    {
+        break;
+    case 5:
         printWallet();
-    }
-
-    if (userOption == 6)
-    {
+        break;
+    case 6:
         gotoNextTimeFrame();
-    }
-    if (userOption == 7)
-    {
+        break;
+    case 7:
         std::cout << "Exit: closing trading terminal." << std::endl;
+        break;
+    default:
+        std::cout << "Invalid option, please try again." << std::endl;
+        break;
     }
 }
