@@ -16,8 +16,6 @@ void RogueTrader::init()
     currentTimeFrame = orderBook.getEarliestTime();
 
     wallet.insertCurrency("BTC", 10.0);
-    wallet.insertCurrency("ETH", 100.0);
-    wallet.insertCurrency("USDT", 1000.0);
 
     std::cout << "Welcome to Rogue Trader!" << std::endl;
     while (true)
@@ -26,9 +24,7 @@ void RogueTrader::init()
         input = getUserOption();
         processUserOption(input);
         if (input == 7)
-        {
             break;
-        }
     }
 }
 
@@ -86,9 +82,14 @@ void RogueTrader::enterAsk()
                 tokens[2], currentTimeFrame,
                 tokens[0], OrderBookType::ask);
 
-            if(wallet.canFulfillOrder(obe)) {
+            obe.username = "rogue-trader";
+
+            if (wallet.canFulfillOrder(obe))
+            {
                 orderBook.insertOrder(obe);
-            } else {
+            }
+            else
+            {
                 std::cout << "RogueTrader::enterAsk - Insufficient funds, please try again." << std::endl;
                 return;
             }
@@ -125,9 +126,14 @@ void RogueTrader::enterBid()
                 tokens[2], currentTimeFrame,
                 tokens[0], OrderBookType::bid);
 
-            if(wallet.canFulfillOrder(obe)) {
+            obe.username = "rogue-trader";
+
+            if (wallet.canFulfillOrder(obe))
+            {
                 orderBook.insertOrder(obe);
-            } else {
+            }
+            else
+            {
                 std::cout << "RogueTrader::enterBid - Insufficient funds, please try again." << std::endl;
                 return;
             }
@@ -152,6 +158,22 @@ void RogueTrader::gotoNextTimeFrame()
 {
     std::cout << "Continue" << std::endl;
     currentTimeFrame = orderBook.getNextTime(currentTimeFrame);
+
+    std::cout << "Going to next time frame" << std::endl;
+    for (std::string p : orderBook.getKnownProducts())
+    {
+        std::cout << "Matching orders for " << p << std::endl;
+        std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids(p, currentTimeFrame);
+        std::cout << "Sales: " << sales.size() << std::endl;
+        for (OrderBookEntry &sale : sales)
+        {
+            std::cout << "Sale price: " << sale.price << std::endl;
+            if (sale.username == "rogue-trader")
+            {
+                wallet.processSale(sale);
+            }
+        }
+    }
 }
 
 void RogueTrader::printMenu()

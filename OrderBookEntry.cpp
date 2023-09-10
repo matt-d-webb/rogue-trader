@@ -1,7 +1,7 @@
 #include "OrderBookEntry.h"
 
-OrderBookEntry::OrderBookEntry(double _price, double _amount, std::string _timestamp, std::string _product, OrderBookType _type)
-    : price{_price}, amount(_amount), timestamp(_timestamp), product(_product), type(_type)
+OrderBookEntry::OrderBookEntry(double _price, double _amount, std::string _timestamp, std::string _product, OrderBookType _type, std::string _username)
+    : price{_price}, amount(_amount), timestamp(_timestamp), product(_product), type(_type), username(_username)
 {
 }
 
@@ -10,8 +10,6 @@ OrderBookType OrderBookEntry::stringToOrderBookType(std::string s) {
         return OrderBookType::ask;
     } else if(s == "bid") {
         return OrderBookType::bid;
-    } else if(s == "sale") {
-        return OrderBookType::sale;
     } else {
         return OrderBookType::unknown;
     }

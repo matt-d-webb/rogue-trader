@@ -30,6 +30,12 @@ class Wallet
         bool canFulfillOrder(const OrderBookEntry& order);
 
         /**
+         * update the wallet based on the sale
+         * assume the order was made by the wallet owner
+        */
+        void processSale(OrderBookEntry& sale);
+
+        /**
          * returns a string representation of the wallet
         */
         std::string toString();
