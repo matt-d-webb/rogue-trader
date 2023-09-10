@@ -5,24 +5,25 @@
 #include "RogueTrader.h"
 #include "CSVReader.h"
 
-RogueTrader::RogueTrader() {
+RogueTrader::RogueTrader()
+{
 }
 
-void RogueTrader::init() {
+void RogueTrader::init()
+{
     int input;
-    while(true) {
-        loadOrderBook();
+    currentTimeFrame = orderBook.getEarliestTime();
+    std::cout << "Welcome to Rogue Trader!" << std::endl;
+    while (true)
+    {
         printMenu();
         input = getUserOption();
         processUserOption(input);
-        if(input == 7) {
+        if (input == 7)
+        {
             break;
         }
     }
-}
-
-void RogueTrader::loadOrderBook() {
-    orders = CSVReader::readCSV("data/20200317.csv");
 }
 
 void RogueTrader::printHelp()
@@ -32,27 +33,30 @@ void RogueTrader::printHelp()
 
 void RogueTrader::printStats()
 {
-    unsigned int bids = 0;
-    unsigned int asks = 0;
-
     std::cout << "======== Statistic ============" << std::endl;
-    std::cout << "Orders: " << orders.size() << std::endl;
-
-    for (OrderBookEntry order : orders)
+    for (std::string const p : orderBook.getKnownProducts())
     {
-        if (order.type == OrderBookType::ask)
-        {
-            asks++;
-        }
-        else if(order.type == OrderBookType::bid)
-        {
-            bids++;
-        }
+        printf("Product: %s\n", p.c_str());
+
+        std::vector<OrderBookEntry> asks = orderBook.getOrders(OrderBookType::ask,
+                                                               p,
+                                                               currentTimeFrame);
+
+        std::vector<OrderBookEntry> bids = orderBook.getOrders(OrderBookType::bid,
+                                                               p,
+                                                               currentTimeFrame);
+
+        printf("Asks: ");
+        printf("\033[1;34m %lu\033[0m ", asks.size());
+        printf("\033[1;31m %f\033[0m ", OrderBook::getLowPrice(asks));
+        printf("\033[1;32m %f\033[0m\n", OrderBook::getHighPrice(asks));
+
+        printf("Bids: ");
+        printf("\033[1;33m %lu\033[0m ", bids.size());
+        printf("\033[1;31m %f\033[0m ", OrderBook::getLowPrice(bids));
+        printf("\033[1;32m %f\033[0m\n\n", OrderBook::getHighPrice(bids));
     }
-    std::cout << "Bids: " << bids << std::endl;
-    std::cout << "Asks: " << asks << std::endl;
-    std::cout << "===============================" << std::endl;
-}
+};
 
 void RogueTrader::enterOffer()
 {
@@ -72,6 +76,7 @@ void RogueTrader::printWallet()
 void RogueTrader::gotoNextTimeFrame()
 {
     std::cout << "Continue" << std::endl;
+    currentTimeFrame = orderBook.getNextTime(currentTimeFrame);
 }
 
 void RogueTrader::printMenu()
@@ -84,6 +89,7 @@ void RogueTrader::printMenu()
     std::cout << "5: Print wallet" << std::endl;
     std::cout << "6: Continue" << std::endl;
     std::cout << "7: Exit" << std::endl;
+    std::cout << "Current time: " << currentTimeFrame << std::endl;
     std::cout << "==================================" << std::endl;
 }
 

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "OrderBookEntry.h"
+#include "OrderBook.h"
 
 class RogueTrader
 {
@@ -12,7 +13,6 @@ public:
 
 private:
     void printHelp();
-    void loadOrderBook();
     void printStats();
     void enterOffer();
     void enterBid();
@@ -22,5 +22,7 @@ private:
     int getUserOption();
     void processUserOption(int userOption);
 
-    std::vector<OrderBookEntry> orders;
+    std::string currentTimeFrame;
+
+    OrderBook orderBook{"data/20200317.csv"};
 };
