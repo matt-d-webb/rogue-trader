@@ -16,9 +16,8 @@ void RogueTrader::init()
     currentTimeFrame = orderBook.getEarliestTime();
 
     wallet.insertCurrency("BTC", 10.0);
+    wallet.insertCurrency("ETH", 100.0);
     wallet.insertCurrency("USDT", 1000.0);
-
-    std::cout << "Wallet contains BTC: " << wallet.containsCurrency("BTC", 9.0) << std::endl;
 
     std::cout << "Welcome to Rogue Trader!" << std::endl;
     while (true)
